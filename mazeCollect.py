@@ -58,14 +58,16 @@ class State :
 
     def minScroogeDistance(self, list):
         dist = 0
+        safeDist = 0
         for item in list:
             dx = abs(self.scrooge[0] - item[0])
             dy = abs(self.scrooge[1] - item[1])
             tmp = dx+dy
             if dist < tmp:
                 dist = tmp
+                safeDist = abs(safe[0] - item[0]) + abs(safe[1] - item[1])
 
-        return dist
+        return dist + safeDist
 
 
 
@@ -155,9 +157,7 @@ class MazeCollect(Problem):
 
     
     def heuristic(self, node):
-        
-        #print('Distance = '+ str(node.state.minScroogeDistance([safe])))
-        return node.state.minScroogeDistance(node.state.dollars) + node.state.minScroogeDistance([safe])
+        return node.state.minScroogeDistance(node.state.dollars + [safe])
     
     def validPos(self,pos):
         return (pos[0] < mazeHeigth and pos[0] >= 0 and pos[1] < mazeWidth and pos[1] >= 0)
@@ -185,6 +185,3 @@ path = node.path()
 path.reverse()
 for n in path:
     print(n.state)
-    for z in range(37-mazeHeigth):
-        print('\n')
-
