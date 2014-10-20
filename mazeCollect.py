@@ -7,6 +7,7 @@
 ##  Created by Nicolas Van Wallendael && Benoit Dardenne          ##
 ##                                                                ##
 
+from sys import maxsize
 from search import *
 import operator
 
@@ -56,23 +57,27 @@ class State :
     def __eq__(self, other):
         return self.dollars == other.dollars and self.scrooge == self.scrooge
 
+    def distance(self, a, b):
+        return abs(a[0] - b[0]) + abs(a[1] - b[1])
+
+
     def minScroogeDistance(self, list):
-        dist = 0
-        safeDist = 0
+        nearest = sys.maxsize
         for item in list:
-            dx = abs(self.scrooge[0] - item[0])
-            dy = abs(self.scrooge[1] - item[1])
-            tmp = dx+dy
-            if dist < tmp:
-                dist = tmp
-                safeDist = abs(safe[0] - item[0]) + abs(safe[1] - item[1])
+            tmp = self.distance(self.scrooge, item)
+            if nearest > tmp:
+                nearest = tmp
+        
+        return nearest
 
-        return dist + safeDist
-
-
-
-
-
+    def minSafeDistance(self, list):
+        furthest = 0
+        for item in list:
+            tmp = self.distance(safe, item)
+            if furthest < tmp:
+                furthest = tmp
+        
+        return furthest
 
 
 ######################  Implement the maze #######################
@@ -157,7 +162,11 @@ class MazeCollect(Problem):
 
     
     def heuristic(self, node):
-        return node.state.minScroogeDistance(node.state.dollars + [safe])
+        return node.state.minScroogeDistance(node.state.dollars) + node.state.minSafeDistance(node.state.dollars)
+        #if node.state.dollars == [] :
+        #    return node.state.minScroogeDistance([safe])
+        #else :
+        #    return node.state.minScroogeDistance(node.state.dollars)
     
     def validPos(self,pos):
         return (pos[0] < mazeHeigth and pos[0] >= 0 and pos[1] < mazeWidth and pos[1] >= 0)
