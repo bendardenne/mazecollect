@@ -62,23 +62,13 @@ class State :
 
 
     def minScroogeDistance(self, list):
-        nearest = 0
-        for item in list:
-            tmp = self.distance(self.scrooge, item) + self.distance(safe, item)
-            if nearest < tmp:
-                nearest = tmp
-        
-        return nearest
-
-    def minSafeDistance(self, list):
         furthest = 0
         for item in list:
-            tmp = self.distance(safe, item)
+            tmp = self.distance(self.scrooge, item) + self.distance(safe, item)
             if furthest < tmp:
                 furthest = tmp
         
         return furthest
-
 
 ######################  Implement the maze #######################
 
@@ -162,7 +152,7 @@ class MazeCollect(Problem):
 
     
     def heuristic(self, node):
-        return node.state.minScroogeDistance(node.state.dollars) #+ node.state.minSafeDistance(node.state.dollars)
+        return node.state.minScroogeDistance(node.state.dollars + [safe]) #+ node.state.minSafeDistance(node.state.dollars)
         #if node.state.dollars == [] :
         #    return node.state.minScroogeDistance([safe])
         #else :
