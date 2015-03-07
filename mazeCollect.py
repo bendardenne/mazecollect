@@ -121,22 +121,16 @@ class MazeCollect(Problem):
 
         mazeWidth  = j - 1      #for '\n'
         mazeHeigth = i          #no EOF
-        
 
     
     def goal_test(self, state):
-    
         return state.dollars == [] and state.scrooge == safe
     
     def successor(self, state):
         for move in moves:
             newPos = tuple(map(operator.add, state.scrooge, move))
-            
-            #print(move)
-            #print(newPos)
 
             if newPos in maze or not self.validPos(newPos):
-                #print('newPos not Valid -> ' +str(newPos) + str(state.scrooge))
                 continue
             
             #update dollars if we found a $
@@ -144,34 +138,19 @@ class MazeCollect(Problem):
             if newPos in newDollars: newDollars.remove(newPos)
             
             newState = State(newDollars, newPos)
-            #print('newPos is  Valid -> ' +str(newPos) + str(state.scrooge))
-            #print(newState)
-            #print('\n\n'+'-------------------------------------------------'+'\n\n')
-            
             yield( (move, newState) )
 
     
     def heuristic(self, node):
-        return node.state.minScroogeDistance(node.state.dollars + [safe]) #+ node.state.minSafeDistance(node.state.dollars)
-        #if node.state.dollars == [] :
-        #    return node.state.minScroogeDistance([safe])
-        #else :
-        #    return node.state.minScroogeDistance(node.state.dollars)
+        return node.state.minScroogeDistance(node.state.dollars + [safe])
     
     def validPos(self,pos):
         return (pos[0] < mazeHeigth and pos[0] >= 0 and pos[1] < mazeWidth and pos[1] >= 0)
         
-    def isWall(self, pos):
-    
-        return maze[pos]
-
     def addWall(self, pos):
         global maze    # Needed to modify global copy of globvar
-
         maze[pos] = True
     
-
-
 
 ###################### Launch the search #########################
 problem=MazeCollect(sys.argv[1])
